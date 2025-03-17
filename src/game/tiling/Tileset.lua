@@ -41,8 +41,12 @@ function Tileset:getImage()
     return self.tileImage
 end
 
-function Tileset:setNotSolid(tilelist)
--- later
+function Tileset:setNotSolid(tilelist) -- tilelist parameter is passed as {1,2,23,30,37}
+    for i,tid in pairs(tilelist) do
+        if self.tiles[tid] then -- if tile exists
+            self.tiles[tid].solid = false -- not solid
+        end
+    end 
 end
 
 return Tileset

@@ -46,10 +46,10 @@ function Stage:drawTile(row,col)
     if curTile then -- if not nil
         love.graphics.draw(self.tileset:getImage(), --img
             curTile.quad,  -- quad
-            (col-1)*self:getTileSize(), --x 
-            (row-1)*self:getTileSize(),  --y
-            curTile.rotation, 
-            curTile.flipHor, 
+            (col-1)*self:getTileSize(), -- x 
+            (row-1)*self:getTileSize(),  -- y
+            curTile.rotation, -- rotation (zero = no rotation)
+            curTile.flipHor, --  no flip = 1, flipped = -1 
             curTile.flipVer)
     end
 end
