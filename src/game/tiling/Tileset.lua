@@ -15,11 +15,22 @@ function Tileset:init(img, tilesize)
 end
 
 function Tileset:createTiles() -- converts img to dict of tiles
-
+    local index = 1
+    for row = 1, self.rowCount do
+        for col = 1, self.colCount do
+            self.tiles[index] = self:newTile(row,col,index)  
+            index = index + 1 
+        end -- end for col
+    end -- end for row
 end
 
 function Tileset:newTile(row,col, index)
-
+    local q = love.graphics.newQuad(
+        (col-1)*self.tileSize, -- x
+        (row-1)*self.tileSize, -- y
+        self.tileSize,self.tileSize,self.tileImage)
+        -- width, height, image/texture
+    return Tile(index, q)
 end
 
 function Tileset:get(index)
@@ -31,7 +42,7 @@ function Tileset:getImage()
 end
 
 function Tileset:setNotSolid(tilelist)
-
+-- later
 end
 
 return Tileset

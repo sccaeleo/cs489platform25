@@ -34,9 +34,25 @@ function Stage:getTileSize()
 end
 
 function Stage:draw()
-
+    for row = 1, self.rowCount do
+        for col = 1, self.colCount do
+            self:drawTile(row,col) 
+        end -- end for col
+    end -- end for row
 end
 
+function Stage:drawTile(row,col)
+    local curTile = self.map[row][col]
+    if curTile then -- if not nil
+        love.graphics.draw(self.tileset:getImage(), --img
+            curTile.quad,  -- quad
+            (col-1)*self:getTileSize(), --x 
+            (row-1)*self:getTileSize(),  --y
+            curTile.rotation, 
+            curTile.flipHor, 
+            curTile.flipVer)
+    end
+end
 
 
 
