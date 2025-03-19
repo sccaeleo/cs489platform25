@@ -54,6 +54,14 @@ function Stage:drawTile(row,col)
     end
 end
 
+function Stage:addBackground(background)
+    table.insert(self.bgs, background)
+end
 
+function Stage:drawBg()
+    for k=1, #self.bgs do
+        self.bgs[k]:draw()
+    end 
+end
 
 return Stage

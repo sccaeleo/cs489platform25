@@ -2,6 +2,9 @@ local Globals = require "src.Globals"
 local Push = require "libs.push"
 local Sounds = require "src.game.Sounds"
 
+local createS0 = require "src.game.stages.createS0"
+local stage = createS0() 
+
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
     love.window.setTitle("CS489 Platformer")
@@ -34,7 +37,7 @@ end
 function love.update(dt)
 
     if gameState == "play" then
-
+        stage:update(dt)
     elseif gameState == "start" then
 
     elseif gameState == "over" then
@@ -62,7 +65,9 @@ function love.draw()
 end
 
 function drawPlayState()
+    stage:drawBg()
 
+    stage:draw()
 end
 
 function drawStartState()

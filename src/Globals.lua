@@ -1,5 +1,5 @@
 gameWidth = 320
 gameHeight = 240
-gameState = "start" 
+gameState = "play" 
 debugFlag = false 
 windowWidth, windowHeight = love.graphics.getDimensions()
