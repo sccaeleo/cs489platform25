@@ -1,6 +1,8 @@
 local Globals = require "src.Globals"
 local Push = require "libs.push"
 local Sounds = require "src.game.Sounds"
+local Player = require "src.game.Player"
+local Camera = require "libs.sxcamera"
 
 local createS0 = require "src.game.stages.createS0"
 local stage = createS0() 
@@ -11,6 +13,13 @@ function love.load()
     Push:setupScreen(gameWidth, gameHeight, windowWidth, windowHeight, {fullscreen = false, resizable = true})
     math.randomseed(os.time()) -- RNG setup for later
 
+    player = Player(0,0)
+    player:setCoords(stage.initialPlayerX, stage.initialPlayerY)
+
+    camera = Camera(gameWidth/2,gameHeight/2,
+        gameWidth,gameHeight)
+    camera:setBounds(0,0,stage:getWidth(), stage:getHeight())
+    camera:setFollowStyle('PLATFORMER')
 end
 
 -- When the game window resizes
@@ -38,6 +47,12 @@ function love.update(dt)
 
     if gameState == "play" then
         stage:update(dt)
+        player:update(dt)
+
+        camera:update(dt)
+        camera:follow(
+            math.floor(player.x+48), math.floor(player.y))
+
     elseif gameState == "start" then
 
     elseif gameState == "over" then
@@ -65,9 +80,16 @@ function love.draw()
 end
 
 function drawPlayState()
+
     stage:drawBg()
 
+    camera:attach()
+
     stage:draw()
+    player:draw()
+    
+    camera:detach()
+
 end
 
 function drawStartState()
