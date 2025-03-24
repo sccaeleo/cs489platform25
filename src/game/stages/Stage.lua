@@ -64,4 +64,18 @@ function Stage:drawBg()
     end 
 end
 
+function Stage:readMapData(mapdata)
+    local index = 1
+    for row = 1, self.rowCount do
+        for col = 1, self.colCount do
+            if mapdata[index] == 0 then
+                self.map[row][col] = nil
+            else -- there is a tile
+                self.map[row][col] = self.tileset:get(mapdata[index])
+            end
+            index = index +1
+        end -- end for col
+    end -- end for row
+end
+
 return Stage

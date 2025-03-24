@@ -4,8 +4,8 @@ local Sounds = require "src.game.Sounds"
 local Player = require "src.game.Player"
 local Camera = require "libs.sxcamera"
 
-local createS0 = require "src.game.stages.createS0"
-local stage = createS0() 
+local createS1 = require "src.game.stages.createS1"
+local stage = createS1() 
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -28,11 +28,13 @@ function love.resize(w,h)
 end
 
 -- Event for keyboard pressing
-function love.keypressed(key, scancode, isrepeat)
+function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
     elseif key == "F2" or key == "tab" then
-        debugFlag = not debugFlag   
+        debugFlag = not debugFlag  
+    else
+        player:keypressed(key) 
     end
 end
 

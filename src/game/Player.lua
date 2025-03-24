@@ -43,22 +43,44 @@ function Player:createAnimations() -- fill up the animations & sprites
 
     self.animations["run"] = runAnim
     self.sprites["run"] = runSprite
+
+    self.animations["jump"] = jumpAnim
+    self.sprites["jump"] = jumpSprite
 end
 
 function Player:update(dt, stage)
-    if love.keyboard.isDown("d","right") then
-        -- move right
-        self.state = "run"
-        self.x = self.x + 96*dt
-        self:setDirection("r")
-    elseif love.keyboard.isDown("a","left") then
-        -- move left
-        self.state = "run"
-        self.x = self.x -96*dt
-        self:setDirection("l")
-    else
-        self.state = "idle"
-        -- stands stills
+    if self.state == "jump" then
+        if self:onGround() then 
+            self.state = "idle"
+            self.speedY = 0
+        else
+            self:jump(dt)
+        end
+
+        if love.keyboard.isDown("d","right") then
+            self.x = self.x + 96*dt
+            self:setDirection("r")
+        elseif love.keyboard.isDown("a","left") then
+            self.x = self.x - 96*dt
+            self:setDirection("l")
+        end
+            
+    else 
+
+        if love.keyboard.isDown("d","right") then
+            -- move right
+            self.state = "run"
+            self.x = self.x + 96*dt
+            self:setDirection("r")
+        elseif love.keyboard.isDown("a","left") then
+            -- move left
+            self.state = "run"
+            self.x = self.x -96*dt
+            self:setDirection("l")
+        else
+            self.state = "idle"
+            -- stands stills
+        end 
     end
 
     self.animations[self.state]:update(dt)
@@ -70,7 +92,12 @@ function Player:draw()
 end
 
 function Player:keypressed(key)
-
+    if key == "space" and self.state ~= "jump" then
+        self.state = "jump"
+        self.speedY = -64 -- jumping speed
+        self.y = self.y -1
+        self.animations["jump"]:gotoFrame(1)
+    end
 end
 
 function Player:keyreleased(key)
@@ -89,6 +116,19 @@ function Player:setDirection(newdir)
             anim:flipH()
         end -- end for
     end -- end if
+end
+
+function Player:jump(dt)
+    self.y = self.y + self.speedY*dt
+    self.speedY = self.speedY +64*dt -- gravity
+end
+
+function Player:onGround() --temporary, only works for stage 0
+    if self.y >= 8*16 then 
+        self.y = 8*16
+        return true
+    end
+    return false
 end
 
 return Player
