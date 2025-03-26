@@ -18,7 +18,7 @@ local function createS1()
 
     -- Initial Player Pos
     stage.initialPlayerX = 1*16
-    stage.initialPlayerY = 8*16
+    stage.initialPlayerY = 13*16 
 
 
     return stage

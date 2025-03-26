@@ -4,9 +4,6 @@ local Sounds = require "src.game.Sounds"
 local Player = require "src.game.Player"
 local Camera = require "libs.sxcamera"
 
-local createS1 = require "src.game.stages.createS1"
-local stage = createS1() 
-
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
     love.window.setTitle("CS489 Platformer")
@@ -14,12 +11,14 @@ function love.load()
     math.randomseed(os.time()) -- RNG setup for later
 
     player = Player(0,0)
-    player:setCoords(stage.initialPlayerX, stage.initialPlayerY)
 
     camera = Camera(gameWidth/2,gameHeight/2,
         gameWidth,gameHeight)
-    camera:setBounds(0,0,stage:getWidth(), stage:getHeight())
     camera:setFollowStyle('PLATFORMER')
+
+    stagemanager:setPlayer(player)
+    stagemanager:setCamera(camera)
+    stagemanager:setStage(1)
 end
 
 -- When the game window resizes
@@ -48,7 +47,7 @@ end
 function love.update(dt)
 
     if gameState == "play" then
-        stage:update(dt)
+        stagemanager:currentStage():update(dt)
         player:update(dt)
 
         camera:update(dt)
@@ -83,11 +82,11 @@ end
 
 function drawPlayState()
 
-    stage:drawBg()
+    stagemanager:currentStage():drawBg()
 
     camera:attach()
 
-    stage:draw()
+    stagemanager:currentStage():draw()
     player:draw()
     
     camera:detach()

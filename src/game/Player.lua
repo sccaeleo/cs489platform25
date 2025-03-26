@@ -131,4 +131,8 @@ function Player:onGround() --temporary, only works for stage 0
     return false
 end
 
+function Player:getDimensions()
+    return self.animations[self.state]:getDimensions()
+end
+
 return Player

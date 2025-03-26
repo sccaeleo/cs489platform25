@@ -78,4 +78,49 @@ function Stage:readMapData(mapdata)
     end -- end for row
 end
 
+function Stage:toMapCoords(gameobject)
+    local width, height = gameobject:getDimensions()
+    local ts = self:getTileSize()
+
+    local col1 = 1+math.floor( (gameobject.x+ts-1)/ts ) --left 
+    local row1 = 1+math.floor( (gameobject.y+ts-1)/ts ) --top
+    -- row1, col1 = top left corner
+    local col2 = math.floor( (gameobject.x+width)/ts ) --right
+    local row2 = math.floor( (gameobject.y+height)/ts )--bottom
+    -- row2,col2 = bottom right corner
+    
+    return row1,col1,row2,col2
+end
+
+function Stage:rightCollision(entity, offset)
+    local row1,col1,row2,col2 = self:toMapCoords(entity)
+    if col2 < self.colCount then -- bellow the right corner of the stage
+        for i = math.max(1, row1+offset), 
+                math.min(row2-offset,self.rowCount) do
+            if self.map[i][col2] ~= nil 
+                    and self.map[i][col2].solid then
+                return true
+            end -- end if 
+        end -- end for
+    end -- end if    
+    return false
+end
+
+function Stage:leftCollision(entity, offset)
+    local row1,col1,row2,col2 = self:toMapCoords(entity)
+    if col1 >= 1 then -- bellow the left corner of the stage
+        for i = math.max(1, row1+offset), 
+                math.min(row2-offset,self.rowCount) do
+            if self.map[i][col1] ~= nil 
+                    and self.map[i][col1].solid then
+                return true
+            end -- end if 
+        end -- end for
+    end -- end if    
+    return false
+end
+
+function Stage:bottomCollision(entity, offset)
+end
+
 return Stage
