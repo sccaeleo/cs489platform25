@@ -48,7 +48,7 @@ function love.update(dt)
 
     if gameState == "play" then
         stagemanager:currentStage():update(dt)
-        player:update(dt)
+        player:update(dt, stagemanager:currentStage())
 
         camera:update(dt)
         camera:follow(

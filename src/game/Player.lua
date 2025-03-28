@@ -49,6 +49,45 @@ function Player:createAnimations() -- fill up the animations & sprites
 end
 
 function Player:update(dt, stage)
+    -- movement logic first
+    if love.keyboard.isDown("d","right") then
+        self:setDirection("r")
+        if not stage:rightCollision(self, 1) then
+            self.x = self.x + 96*dt
+        end
+    elseif love.keyboard.isDown("a","left") then
+        self:setDirection("l")
+        if not stage:leftCollision(self,1) then
+            self.x = self.x - 96*dt
+        end
+    end
+
+    -- changing states logic
+    if self.state == "idle" or self.state == "run" then
+        if not stage:bottomCollision(self,0,1) then
+            self.state = "jump"
+            self.speedY = 32
+            self:jump(dt)
+        elseif love.keyboard.isDown("a","d","right","left") then
+            self.state = "run"
+        else
+            self.state = "idle"
+        end
+    elseif self.state == "jump" then
+        if self.speedY < 0 then
+            self:jump(dt)
+        elseif not stage:bottomCollision(self,1,1) then
+            self:jump(dt)
+        else
+            self.state = "idle"
+            self.speedY = 1
+        end
+    end
+
+    self.animations[self.state]:update(dt)
+end
+
+function Player:updateOld(dt, stage) -- deprecated method
     if self.state == "jump" then
         if self:onGround() then 
             self.state = "idle"

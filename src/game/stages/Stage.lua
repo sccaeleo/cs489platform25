@@ -120,7 +120,19 @@ function Stage:leftCollision(entity, offset)
     return false
 end
 
-function Stage:bottomCollision(entity, offset)
+function Stage:bottomCollision(entity, ofsRow, ofsCol)
+    local row1,col1,row2,col2 = self:toMapCoords(entity)
+
+    if row2+ofsRow < self.rowCount then -- not falling below screen
+        for j = math.max(1, col1+ofsCol),
+                math.min(col2-ofsCol, self.colCount) do
+            if self.map[row2+ofsRow][j] ~= nil 
+                    and self.map[row2+ofsRow][j].solid then
+                return true
+            end -- end if solid tile
+        end -- end for j
+    end -- end if row2 < rowCount
+    return false
 end
 
 return Stage
