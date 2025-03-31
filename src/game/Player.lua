@@ -32,6 +32,13 @@ function Player:init(x,y)
     self.animations = {}
     self.sprites = {}
     self:createAnimations()
+
+    self.lives = 3
+    self.hp = 100
+    self.coins = 0
+    self.gems = 0
+    self.score = 0
+
 end
 
 function Player:reset()
@@ -82,6 +89,13 @@ function Player:update(dt, stage)
             self.state = "idle"
             self.speedY = 1
         end
+    end
+
+    -- collisions logic
+    local obj = stage:checkObjectsCollision(self)
+    if obj then
+        -- Player colided with obj
+
     end
 
     self.animations[self.state]:update(dt)

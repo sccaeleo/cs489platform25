@@ -3,6 +3,7 @@ local Push = require "libs.push"
 local Sounds = require "src.game.Sounds"
 local Player = require "src.game.Player"
 local Camera = require "libs.sxcamera"
+local HUD = require "src.game.HUD"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -11,6 +12,7 @@ function love.load()
     math.randomseed(os.time()) -- RNG setup for later
 
     player = Player(0,0)
+    hud = HUD(player)
 
     camera = Camera(gameWidth/2,gameHeight/2,
         gameWidth,gameHeight)
@@ -91,6 +93,7 @@ function drawPlayState()
     
     camera:detach()
 
+    hud:draw()
 end
 
 function drawStartState()

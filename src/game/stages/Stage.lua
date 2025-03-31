@@ -1,5 +1,6 @@
 local Class = require "libs.hump.class"
 local Matrix = require "libs.matrix"
+local objutil = require "src.game.objects.objutil"
 
 local Stage = Class{}
 function Stage:init(rows, cols, ts)
@@ -19,6 +20,10 @@ end
 
 
 function Stage:update(dt)
+    for k=1, #self.objects do
+        self.objects[k]:update(dt)
+    end
+
 end
 
 function Stage:getWidth()
@@ -39,6 +44,10 @@ function Stage:draw()
             self:drawTile(row,col) 
         end -- end for col
     end -- end for row
+
+    for k=1, #self.objects do
+        self.objects[k]:draw()
+    end
 end
 
 function Stage:drawTile(row,col)
@@ -133,6 +142,32 @@ function Stage:bottomCollision(entity, ofsRow, ofsCol)
         end -- end for j
     end -- end if row2 < rowCount
     return false
+end
+
+function Stage:readObjectsData(rawobjs)
+    self.objects = {} 
+    for k = 1, #rawobjs do
+        local newobj = objutil.convertObjectData(
+            rawobjs[k],self:getTileSize())
+        if newobj then
+            table.insert(self.objects, newobj)
+        end
+    end
+end
+
+function Stage:checkObjectsCollision(entity)
+    local row1,col1,row2,col2 = self:toMapCoords(entity)
+    for k = #self.objects, 1, -1 do
+        if row1<= self.objects[k].row 
+                and row2 >= self.objects[k].row
+                and col1 <= self.objects[k].col 
+                and col2 >= self.objects[k].col then
+            
+            local colidedObj = self.objects[k]
+            table.remove(self.objects, k)
+            return colidedObj
+        end
+    end
 end
 
 return Stage

@@ -7,6 +7,9 @@ local function createS1()
     local mapdata = require "src.game.maps.map1"
     stage:readMapData(mapdata)
 
+    local objdata = require "src.game.maps.map1objects"
+    stage:readObjectsData(objdata)
+
     -- Backgrounds
     local bg1 = Background("graphics/tilesets/FreeCute/BG1.png")
     local bg2 = Background("graphics/tilesets/FreeCute/BG2.png")
