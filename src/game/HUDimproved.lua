@@ -30,7 +30,7 @@ function HUD:update(dt)
     self.coin:update(dt)
 
     for k = 1, #self.gems do
-        if self.player.crystals >= k then
+        if self.player.gems >= k then
             self.gems[k]:setType("blue")
         else
             self.gems[k]:setType("grey")

@@ -3,7 +3,7 @@ local Push = require "libs.push"
 local Sounds = require "src.game.Sounds"
 local Player = require "src.game.Player"
 local Camera = require "libs.sxcamera"
-local HUD = require "src.game.HUD"
+local HUD = require "src.game.HUDimproved"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -51,6 +51,7 @@ function love.update(dt)
     if gameState == "play" then
         stagemanager:currentStage():update(dt)
         player:update(dt, stagemanager:currentStage())
+        hud:update(dt)
 
         camera:update(dt)
         camera:follow(

@@ -24,6 +24,9 @@ function Stage:update(dt)
         self.objects[k]:update(dt)
     end
 
+    for k=1, #self.mobs do 
+        self.mobs[k]:update(dt, self)
+    end
 end
 
 function Stage:getWidth()
@@ -48,6 +51,10 @@ function Stage:draw()
     for k=1, #self.objects do
         self.objects[k]:draw()
     end
+
+    for k=1, #self.mobs do 
+        self.mobs[k]:draw()
+    end
 end
 
 function Stage:drawTile(row,col)
@@ -61,6 +68,10 @@ function Stage:drawTile(row,col)
             curTile.flipHor, --  no flip = 1, flipped = -1 
             curTile.flipVer)
     end
+end
+
+function Stage:addMob(aMob)
+    table.insert(self.mobs, aMob)
 end
 
 function Stage:addBackground(background)

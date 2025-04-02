@@ -9,7 +9,7 @@ function Enemy:init()
     self.type = ""
     self.dir = "l" -- Direction r = right, l = left
     self.state = "idle" -- idle state
-    self.invincile = false
+    self.invincile = false --mispelled oops =(
     self.animations = {} -- dict of animations (each mob will have its own)
     self.sprites = {} -- dict of sprites (for animations)
     -- Attributes
@@ -40,9 +40,20 @@ function Enemy:update(dt)
 end
 
 function Enemy:draw()
+    self.animations[self.state]:draw(self.sprites[self.state],
+        math.floor(self.x), math.floor(self.y))
 end
 
 function Enemy:changeDirection()
+    if self.dir == "l" then
+        self.dir = "r"
+    else
+        self.dir = "l"
+    end
+
+    for st,anim in pairs(self.animations) do
+        anim:flipH()
+    end
 end
 
 function Enemy:hit(damage)
