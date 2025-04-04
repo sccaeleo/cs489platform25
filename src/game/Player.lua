@@ -27,6 +27,12 @@ local attackGrid = Anim8.newGrid(96, 80, attackSprite:getWidth(), attackSprite:g
 local attack1Anim = Anim8.newAnimation(attackGrid('1-4',1),0.15)
 local attack2Anim = Anim8.newAnimation(attackGrid('5-8',1),0.15)
 
+-- Getting Hit Animation Resources (reusing Jump Sprites)
+local hitSprite = jumpSprite
+local hitGrid = jumpGrid
+local hitAnim = Anim8.newAnimation(hitGrid('13-14',1,2,1),0.3)
+-- Gets the frames 13-14, line 1, and frame 2, line 1
+
 
 
 local Player = Class{}
@@ -75,6 +81,10 @@ function Player:createAnimations() -- fill up the animations & sprites
     self.animations["attack2"] = attack2Anim
     self.animations["attack2"].onLoop = function() self:finishAttack() end
     self.sprites["attack2"] = attackSprite
+
+    self.animations["hit"] = hitAnim
+    self.animations["hit"].onLoop = function() self:finishHit() end
+    self.sprites["hit"] = hitSprite
 
     -- Add these to Player:createAnimations()
     self.hurtboxes["idle"] = Hbox(self,24,16,16,48)
@@ -138,6 +148,25 @@ function Player:update(dt, stage)
             if mob.died then 
                 self.score = self.score + mob.score 
             end
+        end
+    end
+
+    -- getting hit code
+    if self.state ~= "hit" then -- has not been hit yet, check for it
+        local mob = stage:checkMobsHboxCollision(self:getHurtbox(),"hit")
+        if mob then
+            self.state = "hit"
+            self.speedY = -32 
+            self.hp = math.max(0, self.hp - mob.damage)
+        end
+    else -- Player got hit, continue the animation/movement of getting hit
+        if self.dir == "r" then
+            self.x = math.max(0,self.x - 96*dt) -- move backwards
+        else
+            self.x = math.min(self.x + 96*dt, stage:getWidth()-32)
+        end
+        if not stage:bottomCollision(self,1,1) then --did not land on ground
+            self:jump(dt, stage) -- keeps jumping/falling 
         end
     end
 
@@ -300,5 +329,8 @@ function Player:died(stage)
     self.y = stage.initialPlayerY
 end
 
+function Player:finishHit()
+    self.state = "idle"
+end
 
 return Player

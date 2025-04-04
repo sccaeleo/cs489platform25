@@ -34,6 +34,7 @@ function Boar:init(type) Enemy:init() -- superclass const.
 
     self.hp = 20
     self.score = 200
+    self.damage = 20
 
     self:setAnimation("idle",idleSprite, idleAnim)
     self:setAnimation("walk",walkSprite, walkAnim)
