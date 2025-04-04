@@ -33,7 +33,10 @@ local hitGrid = jumpGrid
 local hitAnim = Anim8.newAnimation(hitGrid('13-14',1,2,1),0.3)
 -- Gets the frames 13-14, line 1, and frame 2, line 1
 
-
+-- Dying animation resources
+local dieSprite = love.graphics.newImage("graphics/char/Dead-Sheet.png")
+local dieGrid = Anim8.newGrid(80, 80, dieSprite:getWidth(), dieSprite:getHeight())
+local dieAnim = Anim8.newAnimation(dieGrid('1-8',1),0.1)
 
 local Player = Class{}
 function Player:init(x,y)
@@ -85,6 +88,10 @@ function Player:createAnimations() -- fill up the animations & sprites
     self.animations["hit"] = hitAnim
     self.animations["hit"].onLoop = function() self:finishHit() end
     self.sprites["hit"] = hitSprite
+
+    self.animations["die"] = dieAnim
+    self.animations["die"].onLoop = function() self:died() end
+    self.sprites["die"] = dieSprite
 
     -- Add these to Player:createAnimations()
     self.hurtboxes["idle"] = Hbox(self,24,16,16,48)
@@ -170,6 +177,11 @@ function Player:update(dt, stage)
         end
     end
 
+    -- Check Player HP for d*
+    if self.hp <= 0 then 
+        self.state = "die"
+    end
+
     self.animations[self.state]:update(dt)
 end
 
@@ -181,44 +193,6 @@ function Player:handleObjectCollision(obj)
         self.gems = self.gems +1
         self.score = self.score +50
     end
-end
-
-function Player:updateOld(dt, stage) -- deprecated method
-    if self.state == "jump" then
-        if self:onGround() then 
-            self.state = "idle"
-            self.speedY = 0
-        else
-            self:jump(dt)
-        end
-
-        if love.keyboard.isDown("d","right") then
-            self.x = self.x + 96*dt
-            self:setDirection("r")
-        elseif love.keyboard.isDown("a","left") then
-            self.x = self.x - 96*dt
-            self:setDirection("l")
-        end
-            
-    else 
-
-        if love.keyboard.isDown("d","right") then
-            -- move right
-            self.state = "run"
-            self.x = self.x + 96*dt
-            self:setDirection("r")
-        elseif love.keyboard.isDown("a","left") then
-            -- move left
-            self.state = "run"
-            self.x = self.x -96*dt
-            self:setDirection("l")
-        else
-            self.state = "idle"
-            -- stands stills
-        end 
-    end
-
-    self.animations[self.state]:update(dt)
 end
 
 function Player:draw()
@@ -320,6 +294,8 @@ function Player:getHurtbox()
 end
 
 function Player:died(stage)
+    if stage == nil then stage = stagemanager:currentStage() end
+
     self.lives = self.lives - 1
     self:setDirection("r")
     self.state = "idle"
