@@ -32,9 +32,21 @@ function Boar:init(type) Enemy:init() -- superclass const.
     self.hitboxes = {}
     self.hurtboxes = {}
 
+    self.hp = 20
+    self.score = 200
+
     self:setAnimation("idle",idleSprite, idleAnim)
     self:setAnimation("walk",walkSprite, walkAnim)
     self:setAnimation("hit", hitSprite, hitAnim)
+
+    self:setHurtbox("idle",10,10,34,22)
+    self:setHurtbox("walk",10,10,34,22)
+    self:setHurtbox("hit",6,2,34,30)
+
+    self:setHitbox("idle",10,10,34,22)
+    self:setHitbox("walk",10,10,34,22)
+    --self:setHurtbox("hit",6,2,34,30)
+
 
     Timer.every(5,function() self:changeState() end)
 end
@@ -70,5 +82,27 @@ function Boar:update(dt, stage)
     self.animations[self.state]:update(dt)
 end -- end function
     
+function Boar:hit(damage, direction)
+    if self.invincile then return end
+
+    self.invincile = true
+    self.hp = self.hp - damage
+    self.state = "hit"
+
+    if self.hp <= 0 then
+        self.died = true
+    end
+
+    Timer.after(1, function() self:endHit(direction) end)
+    Timer.after(0.9, function() self.invincile = false end)
+
+end
+
+function Boar:endHit(direction)
+    if self.dir == direction then
+        self:changeDirection()
+    end
+    self.state = "walk"
+end
 
 return Boar

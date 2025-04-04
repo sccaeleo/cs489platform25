@@ -130,6 +130,16 @@ function Player:update(dt, stage)
         self:handleObjectCollision(obj)
     end
 
+    if self.state == "attack1" or self.state == "attack2" then
+        local mob = stage:checkMobsHboxCollision(self:getHitbox())
+        if mob ~= nil then
+            mob:hit(10, self.dir)
+            if mob.died then 
+                self.score = self.score + mob.score 
+            end
+        end
+    end
+
     self.animations[self.state]:update(dt)
 end
 
@@ -184,6 +194,22 @@ end
 function Player:draw()
     self.animations[self.state]:draw(self.sprites[self.state],
         math.floor(self.x), math.floor(self.y) )
+
+    if debugFlag then
+        local w,h = self:getDimensions()
+        love.graphics.rectangle("line",self.x,self.y,w,h) -- sprite
+
+        if self:getHurtbox() then
+            love.graphics.setColor(0,0,1) -- blue
+            self:getHurtbox():draw()
+        end
+
+        if self:getHitbox() then
+            love.graphics.setColor(1,0,0) -- red
+            self:getHitbox():draw()
+        end
+        love.graphics.setColor(1,1,1) 
+    end
 end
 
 function Player:keypressed(key)
@@ -242,5 +268,22 @@ end
 function Player:finishAttack()
     self.state = "idle"
 end
+
+function Player:getHbox(boxtype)
+    if boxtype == "hit" then
+        return self.hitboxes[self.state]
+    else
+        return self.hurtboxes[self.state]
+    end
+end
+
+function Player:getHitbox()
+    return self:getHbox("hit")
+end
+
+function Player:getHurtbox()
+    return self:getHbox("hurt")
+end
+
 
 return Player

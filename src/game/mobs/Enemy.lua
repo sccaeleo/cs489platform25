@@ -42,6 +42,23 @@ end
 function Enemy:draw()
     self.animations[self.state]:draw(self.sprites[self.state],
         math.floor(self.x), math.floor(self.y))
+    
+    if debugFlag then
+        local w,h = self:getDimensions()
+        love.graphics.rectangle("line",self.x,self.y,w,h) -- sprite
+    
+        if self:getHurtbox() then
+            love.graphics.setColor(0,0,1) -- blue
+            self:getHurtbox():draw()
+        end
+    
+        if self:getHitbox() then
+            love.graphics.setColor(1,0,0) -- red
+            self:getHitbox():draw()
+        end
+        love.graphics.setColor(1,1,1) 
+    end
+        
 end
 
 function Enemy:changeDirection()
@@ -59,5 +76,30 @@ end
 function Enemy:hit(damage)
     self.hp = self.hp - damage
 end
+
+function Enemy:getHbox(boxtype)
+    if boxtype == "hit" then
+        return self.hitboxes[self.state]
+    else
+        return self.hurtboxes[self.state]
+    end
+end
+
+function Enemy:getHitbox()
+    return self:getHbox("hit")
+end
+
+function Enemy:getHurtbox()
+    return self:getHbox("hurt")
+end
+
+function Enemy:setHurtbox(state,ofx,ofy,width,height)
+    self.hurtboxes[state] = Hbox(self,ofx,ofy,width,height)
+end
+
+function Enemy:setHitbox(state,ofx,ofy,width,height)
+    self.hitboxes[state] = Hbox(self,ofx,ofy,width,height)
+end
+
 
 return Enemy

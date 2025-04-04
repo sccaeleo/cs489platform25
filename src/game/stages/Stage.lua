@@ -24,9 +24,14 @@ function Stage:update(dt)
         self.objects[k]:update(dt)
     end
 
-    for k=1, #self.mobs do 
+    for k=#self.mobs, 1, -1 do 
         self.mobs[k]:update(dt, self)
+        if self.mobs[k].died then
+            table.remove(self.mobs, k)
+        end
     end
+
+
 end
 
 function Stage:getWidth()
@@ -179,6 +184,19 @@ function Stage:checkObjectsCollision(entity)
             return colidedObj
         end
     end
+end
+
+function Stage:checkMobsHboxCollision(anHbox, boxtype)
+    if anHbox == nil then return nil end
+
+    for k=1, #self.mobs do
+        local mobHbox = self.mobs[k]:getHbox(boxtype)
+        if mobHbox ~= nil and mobHbox:collision(anHbox) then
+            return self.mobs[k]
+        end -- end if
+    end -- end for mobs
+
+    return nil
 end
 
 return Stage
