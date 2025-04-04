@@ -28,6 +28,7 @@ local attack1Anim = Anim8.newAnimation(attackGrid('1-4',1),0.15)
 local attack2Anim = Anim8.newAnimation(attackGrid('5-8',1),0.15)
 
 
+
 local Player = Class{}
 function Player:init(x,y)
     self.x = x
@@ -106,7 +107,7 @@ function Player:update(dt, stage)
         if not stage:bottomCollision(self,0,1) then
             self.state = "jump"
             self.speedY = 32
-            self:jump(dt)
+            self:jump(dt, stage)
         elseif love.keyboard.isDown("a","d","right","left") then
             self.state = "run"
         else
@@ -114,9 +115,9 @@ function Player:update(dt, stage)
         end
     elseif self.state == "jump" then
         if self.speedY < 0 then
-            self:jump(dt)
+            self:jump(dt, stage)
         elseif not stage:bottomCollision(self,1,1) then
-            self:jump(dt)
+            self:jump(dt, stage)
         else
             self.state = "idle"
             self.speedY = 1
@@ -246,9 +247,13 @@ function Player:setDirection(newdir)
     end -- end if
 end
 
-function Player:jump(dt)
-    self.y = self.y + self.speedY*dt
-    self.speedY = self.speedY +64*dt -- gravity
+function Player:jump(dt, stage)
+    if self.y < stage:getHeight() then
+        self.y = self.y + self.speedY*dt
+        self.speedY = self.speedY +64*dt -- gravity
+    else -- fell to its d**
+        self:died(stage)
+    end
 end
 
 function Player:onGround() 
@@ -283,6 +288,16 @@ end
 
 function Player:getHurtbox()
     return self:getHbox("hurt")
+end
+
+function Player:died(stage)
+    self.lives = self.lives - 1
+    self:setDirection("r")
+    self.state = "idle"
+    self.speedY = 1
+    self.hp = 100
+    self.x = stage.initialPlayerX
+    self.y = stage.initialPlayerY
 end
 
 
