@@ -9,7 +9,7 @@ function Enemy:init()
     self.type = ""
     self.dir = "l" -- Direction r = right, l = left
     self.state = "idle" -- idle state
-    self.invincile = false --mispelled oops =(
+    self.invincible = false --mispelled oops =(
     self.animations = {} -- dict of animations (each mob will have its own)
     self.sprites = {} -- dict of sprites (for animations)
     -- Attributes

@@ -83,9 +83,9 @@ function Boar:update(dt, stage)
 end -- end function
     
 function Boar:hit(damage, direction)
-    if self.invincile then return end
+    if self.invincible then return end
 
-    self.invincile = true
+    self.invincible = true
     self.hp = self.hp - damage
     self.state = "hit"
 
@@ -94,7 +94,7 @@ function Boar:hit(damage, direction)
     end
 
     Timer.after(1, function() self:endHit(direction) end)
-    Timer.after(0.9, function() self.invincile = false end)
+    Timer.after(0.9, function() self.invincible = false end)
 
 end
 
