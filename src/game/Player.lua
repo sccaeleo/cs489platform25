@@ -2,6 +2,7 @@ local Class = require "libs.hump.class"
 local Anim8 = require "libs.anim8"
 local Tween = require "libs.tween"
 local Hbox = require "src.game.Hbox"
+local Sounds = require "src.game.Sounds"
 
 local idleSprite = love.graphics.newImage(
     "graphics/char/Idle-Sheet.png")
@@ -180,6 +181,7 @@ function Player:update(dt, stage)
     -- Check Player HP for d*
     if self.hp <= 0 then 
         self.state = "die"
+        Sounds["die"]:play()
     end
 
     self.animations[self.state]:update(dt)
@@ -189,9 +191,11 @@ function Player:handleObjectCollision(obj)
     if obj.name == "coin" then
         self.coins = self.coins +1
         self.score = self.score +10
+        Sounds["coin"]:play()
     elseif obj.name == "gem" then
         self.gems = self.gems +1
         self.score = self.score +50
+        Sounds["gem"]:play()
     end
 end
 
@@ -222,13 +226,16 @@ function Player:keypressed(key)
         self.speedY = -64 -- jumping speed
         self.y = self.y -1
         self.animations["jump"]:gotoFrame(1)
+        Sounds["jump"]:play()
     elseif key=="f" and self.state ~="jump" 
             and self.state~="attack1" and self.state~="attack2" then
         self.state = "attack1"
         self.animations["attack1"]:gotoFrame(1)
+        Sounds["attack1"]:play()
     elseif key=="f" and self.state == "attack1" then
         self.state = "attack2"
         self.animations["attack2"]:gotoFrame(1)
+        Sounds["attack2"]:play()
     end
 end
 

@@ -89,6 +89,7 @@ function Boar:hit(damage, direction)
     self.invincible = true
     self.hp = self.hp - damage
     self.state = "hit"
+    Sounds["mob_hurt"]:play()
 
     if self.hp <= 0 then
         self.died = true
