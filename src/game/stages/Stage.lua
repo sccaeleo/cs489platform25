@@ -199,4 +199,22 @@ function Stage:checkMobsHboxCollision(anHbox, boxtype)
     return nil
 end
 
+function Stage:setMusic(music)
+    self.music = music
+end
+
+function Stage:playMusic()
+    if self.music then
+        self.music:setLooping(true)
+        self.music:play()
+    end
+end
+
+function Stage:stopMusic()
+    if self.music and self.music:isPlaying() then
+        self.music:stop()
+    end
+end
+    
+
 return Stage

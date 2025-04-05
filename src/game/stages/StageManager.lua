@@ -33,7 +33,7 @@ end
 
 function StageManager:setStage(index)
     if self:currentStage() then
-        --self:currentStage():stopMusic() -- stops music from previous stage
+        self:currentStage():stopMusic() -- stops music from previous stage
     end
 
     self.index = index
@@ -44,7 +44,7 @@ function StageManager:setStage(index)
     self.player.y = self.current.initialPlayerY
      
     self.camera:setBounds(0, 0, self:currentStage():getWidth(), self:currentStage():getHeight())
-    --self:currentStage():playMusic()
+    self:currentStage():playMusic()
     return self:currentStage()
 end
 

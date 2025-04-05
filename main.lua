@@ -20,7 +20,11 @@ function love.load()
 
     stagemanager:setPlayer(player)
     stagemanager:setCamera(camera)
-    stagemanager:setStage(1)
+    --stagemanager:setStage(1)
+
+    titleFont = love.graphics.newFont("fonts/Kaph-Regular.ttf",26)
+    stagemanager:setStage(0)
+
 end
 
 -- When the game window resizes
@@ -34,6 +38,10 @@ function love.keypressed(key)
         love.event.quit()
     elseif key == "F2" or key == "tab" then
         debugFlag = not debugFlag  
+    elseif key == "return" and gameState=="start" then
+        gameState = "play"
+        stagemanager:setStage(1)
+
     else
         player:keypressed(key) 
     end
@@ -47,6 +55,11 @@ end
 
 -- Update is executed each frame, dt is delta time (a fraction of a sec)
 function love.update(dt)
+    if player.lives <= 0 and gameState ~= "over" then 
+        gameState = "over"
+        stagemanager:currentStage():stopMusic()
+        Sounds["game_over"]:play()
+    end
 
     if gameState == "play" then
         stagemanager:currentStage():update(dt)
@@ -98,9 +111,27 @@ function drawPlayState()
 end
 
 function drawStartState()
-
+    love.graphics.setColor(0.3,0.3,0.3) -- dark gray
+    stagemanager:currentStage():drawBg()
+    stagemanager:currentStage():draw() -- draw Stage zero
+    player:draw() -- and the player sprite
+    love.graphics.setColor(1,1,0) -- Yellow
+    love.graphics.printf("CS489 Platformer", titleFont,0,20,gameWidth,"center") -- Title    love.graphics.printf("Press Enter to Play", 0,140,gameWidth,"center")
+    love.graphics.printf("Press Enter to Start",0,100,gameWidth,"center") -- Title    love.graphics.printf("Press Enter to Play", 0,140,gameWidth,"center")
+        
 end
 
 function drawGameOverState()
+    love.graphics.setColor(0.3,0.3,0.3)
+    stagemanager:currentStage():drawBg()
+    camera:attach()  -- draw moving objects within attach() - detach()
+    stagemanager:currentStage():draw()
+    --player:draw()
+    camera:detach() -- ends camera effect
 
+    love.graphics.setColor(1,0,0,1)
+    love.graphics.printf("Game Over", titleFont,0,80,gameWidth,"center")
+    love.graphics.printf("Total Score "..player.score,0,110,gameWidth,"center")
+
+    --love.graphics.printf("Press Enter to Start Again", 0,120,gameWidth,"center")
 end

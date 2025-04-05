@@ -2,6 +2,7 @@ local Stage = require "src.game.stages.Stage"
 local BasicTileset = require "src.game.tiling.BasicTileset"
 local Background = require "src.game.tiling.Background"
 local Boar = require "src.game.mobs.Boar"
+local Sounds = require "src.game.Sounds"
 
 local function createS1()
     local stage = Stage(20,50,BasicTileset)
@@ -29,6 +30,9 @@ local function createS1()
     mob1:setCoord(25*16, 12*16)
     mob1:changeDirection()
     stage:addMob(mob1)
+
+    -- music
+    stage:setMusic(Sounds["music_adventure"])
 
     return stage
 end
