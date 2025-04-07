@@ -323,6 +323,7 @@ function Player:died(stage)
     self.hp = 100
     self.x = stage.initialPlayerX
     self.y = stage.initialPlayerY
+    Sounds["die"]:play()
 end
 
 function Player:finishHit()

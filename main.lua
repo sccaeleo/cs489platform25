@@ -137,5 +137,5 @@ function drawGameOverState()
     love.graphics.printf("Game Over", titleFont,0,80,gameWidth,"center")
     love.graphics.printf("Total Score "..player.score,0,110,gameWidth,"center")
 
-    --love.graphics.printf("Press Enter to Start Again", 0,120,gameWidth,"center")
+    love.graphics.printf("Press any key for Start Screen", 0,150,gameWidth,"center")
 end
