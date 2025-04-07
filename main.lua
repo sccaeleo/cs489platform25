@@ -38,6 +38,10 @@ function love.keypressed(key)
         love.event.quit()
     elseif key == "F2" or key == "tab" then
         debugFlag = not debugFlag  
+    elseif gameState == "over" then
+        gameState = "start"
+        player:reset()
+        stagemanager:setStage(0)
     elseif key == "return" and gameState=="start" then
         gameState = "play"
         stagemanager:setStage(1)
