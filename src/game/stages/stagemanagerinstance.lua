@@ -5,7 +5,7 @@ local createS2 = require "src.game.stages.createS2"
 
 local manager = StageManager()
 
-manager.createStage[0] = createS0 
+manager.createStage[0] = createS0
 manager.createStage[1] = createS1
 manager.createStage[2] = createS2
 
