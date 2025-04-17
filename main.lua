@@ -1,3 +1,5 @@
+-- Authors: Victoria Shelton & Tim Hunt
+
 local Globals = require "src.Globals"
 local Push = require "libs.push"
 local Sounds = require "src.game.Sounds"
@@ -46,6 +48,17 @@ function love.keypressed(key)
         gameState = "play"
         stagemanager:setStage(1)
 
+    -- Set stage 2 on complete
+    elseif key == "return" and gameState == "complete" then
+        gameState = "play"
+        player:reset()
+        stagemanager:setStage(2)
+        
+
+    -- Debug key
+    elseif key == "p" then
+        gameState = "complete"
+
     else
         player:keypressed(key) 
     end
@@ -63,6 +76,14 @@ function love.update(dt)
         gameState = "over"
         stagemanager:currentStage():stopMusic()
         Sounds["game_over"]:play()
+    end
+
+    -- Move to next stage if player collects 3 gems
+    if player.gems >= 3 and gameState ~= "complete" then
+        gameState = "complete"
+        stagemanager:currentStage():stopMusic()
+        Sounds["level_completed"]:play()
+        player.gems = 0
     end
 
     if gameState == "play" then
@@ -92,6 +113,9 @@ function love.draw()
         drawStartState()
     elseif gameState == "over" then
         drawGameOverState()
+    -- Stage complete change
+    elseif gameState == "complete" then
+        drawStageCompleteState()
     else --Error, should not happen
         love.graphics.setColor(1,1,0) -- Yellow
         love.graphics.printf("Error", 0,20,gameWidth,"center")
@@ -138,4 +162,20 @@ function drawGameOverState()
     love.graphics.printf("Total Score "..player.score,0,110,gameWidth,"center")
 
     love.graphics.printf("Press any key for Start Screen", 0,150,gameWidth,"center")
+end
+
+-- Draw function for Stage Complete
+function drawStageCompleteState()
+    love.graphics.setColor(0.3,0.3,0.3)
+    stagemanager:currentStage():drawBg()
+    camera:attach()
+    stagemanager:currentStage():draw()
+    camera:detach()
+
+    -- Set greeeeeeeeeen
+    love.graphics.setColor(0,1,0)
+    love.graphics.printf("Stage Complete", titleFont,0,80,gameWidth,"center")
+    love.graphics.printf("Total Score "..player.score,0,110,gameWidth,"center")
+
+    love.graphics.printf("Press enter to go to the next stage", 0,150,gameWidth,"center")
 end

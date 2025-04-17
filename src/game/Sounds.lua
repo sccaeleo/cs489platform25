@@ -2,9 +2,11 @@
 local sounds = {}  -- create an empty table
 
 sounds["music_adventure"] = love.audio.newSource("sounds/timbeek/8Bit_Adventure.wav","static")
-sounds["music_adventure"]:setVolume(0.3)
+sounds["music_adventure"]:setVolume(0.1)
 sounds["music_surfrock"] = love.audio.newSource("sounds/timbeek/Surf_Rock_Light.wav","static")
-sounds["music_surfrock"]:setVolume(0.3)
+sounds["music_surfrock"]:setVolume(0.1)
+sounds["music_dewdrop"] = love.audio.newSource("sounds/skia/Dewdrop Maze.wav","static")
+sounds["music_dewdrop"]:setVolume(0.1)
 -- Add this to the file
 sounds["attack1"] = love.audio.newSource("sounds/leohpaz/Slash.wav","static")
 sounds["attack2"] = love.audio.newSource("sounds/leohpaz/Claw.wav","static")
